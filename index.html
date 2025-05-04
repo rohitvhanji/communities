@@ -3,239 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balegere - Sobha Sentosa Map</title>
-    <link rel="icon" type="image/x-icon" href="https://www.google.com/favicon.ico">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Community Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
         }
         .filter-section {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
-        .map-container {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 8px;
         }
-        select, button {
-            transition: all 0.2s ease-in-out;
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        select:focus, button:focus {
-            outline: none;
-            ring: 2px solid #3b82f6;
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
         }
-        button:hover {
-            background-color: #2563eb;
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        .map-section {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            color: #ffffff;
+        }
+        .btn {
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #059669;
+        }
+        select, input[type="checkbox"] {
+            accent-color: #10b981;
+        }
+        footer {
+            background-color: #1f2937;
+            color: #d1d5db;
+        }
+        .street-view-link {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        .street-view-link:hover {
+            color: #1d4ed8;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4 max-w-5xl">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Find Societies in Balegere & Nearby</h1>
+<body>
+    <header class="header py-8">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl font-bold">Community Search</h1>
+            <p class="mt-3 text-lg opacity-90">Discover the perfect community by locality and configuration</p>
+        </div>
+    </header>
 
-        <!-- Filter Section -->
-        <div class="filter-section p-6 mb-8">
-            <div class="flex flex-col md:flex-row gap-4 mb-4">
-                <div class="flex-1">
-                    <label for="locality" class="block text-sm font-medium text-gray-700 mb-1">Locality</label>
-                    <select id="locality" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
-                        <option value="">All Localities</option>
-                        <option value="Balegere">Balegere</option>
-                        <option value="Bellandur">Bellandur</option>
-                        <option value="Marathahalli">Marathahalli</option>
-                        <option value="Doddanekundi">Doddanekundi</option>
-                        <option value="Mahadevapura">Mahadevapura</option>
-                        <option value="Old Madras Road">Old Madras Road</option>
-                        <option value="Whitefield">Whitefield</option>
-                        <option value="KR Puram">KR Puram</option>
-                        <option value="Hoodi">Hoodi</option>
-                        <option value="Kundalhalli">Kundalhalli</option>
-                        <option value="AECS Layout">AECS Layout</option>
-                        <option value="Varthur">Varthur</option>
-                        <option value="Sarjapur Road">Sarjapur Road</option>
-                        <option value="Kannamangala">Kannamangala</option>
-                        <option value="Kodathi">Kodathi</option>
-                        <option value="Budigere">Budigere</option>
-                        <option value="Soukya Road">Soukya Road</option>
-                        <option value="Seegehalli">Seegehalli</option>
-                    </select>
+    <main class="container mx-auto py-10">
+        <!-- Search by Locality and Configuration -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-semibold mb-6">Search Communities</h2>
+            <div class="filter-section">
+                <div class="flex flex-wrap gap-6 mb-8">
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="area" class="block text-sm font-medium text-gray-700 mb-1">Area</label>
+                        <select id="area" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 transition">
+                            <option value="">All Areas</option>
+                            <option value="Bellandur">Bellandur</option>
+                            <option value="Marathahalli">Marathahalli</option>
+                            <option value="Doddanekundi">Doddanekundi</option>
+                            <option value="Mahadevapura">Mahadevapura</option>
+                            <option value="Old Madras Road">Old Madras Road</option>
+                            <option value="Whitefield">Whitefield</option>
+                            <option value="KR Puram">KR Puram</option>
+                            <option value="Hoodi">Hoodi</option>
+                            <option value="Sarjapur Road">Sarjapur Road</option>
+                            <option value="Kundalhalli">Kundalhalli</option>
+                            <option value="AECS Layout">AECS Layout</option>
+                            <option value="Varthur">Varthur</option>
+                            <option value="Balegere">Balegere</option>
+                            <option value="Kannamangala">Kannamangala</option>
+                            <option value="Kodathi">Kodathi</option>
+                            <option value="Budigere">Budigere</option>
+                            <option value="Soukya Road">Soukya Road</option>
+                            <option value="Seegehalli">Seegehalli</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Configuration</label>
+                        <div class="mt-2 flex gap-4 flex-wrap">
+                            <label class="flex items-center"><input type="checkbox" value="1" class="config-filter mr-2"> 1 BHK</label>
+                            <label class="flex items-center"><input type="checkbox" value="2" class="config-filter mr-2"> 2 BHK</label>
+                            <label class="flex items-center"><input type="checkbox" value="3" class="config-filter mr-2"> 3 BHK</label>
+                            <label class="flex items-center"><input type="checkbox" value="4" class="config-filter mr-2"> 4 BHK</label>
+                            <label class="flex items-center"><input type="checkbox" value="5" class="config-filter mr-2"> 5 BHK</label>
+                            <label class="flex items-center"><input type="checkbox" value="6" class="config-filter mr-2"> 6 BHK</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <label for="configuration" class="block text-sm font-medium text-gray-700 mb-1">Configuration</label>
-                    <select id="configuration" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
-                        <option value="">All Configurations</option>
-                        <option value="1BHK">1BHK</option>
-                        <option value="2BHK">2BHK</option>
-                        <option value="3BHK">3BHK</option>
-                        <option value="4BHK">4BHK</option>
-                        <option value="5BHK">5BHK</option>
-                        <option value="6BHK">6BHK</option>
-                    </select>
+                <div class="table-container">
+                    <table id="community-table">
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>Society Name</th>
+                                <th>Configurations Available</th>
+                                <th>Street View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Bellandur</td><td>Divyasree 77</td><td>3, 4, 5</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Mantri Espana</td><td>4, 5</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Green Glen Layout</td><td>None</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Sobha Marvella</td><td>3, 4</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Sobha Aquamarine</td><td>3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Adarsh Palm Retreat</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Prestige Kew Gardens</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Assetz East Point</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Rohan Iksha</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Oceanus Freesia Enclave</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Kul I Life</td><td>3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Sobha Hibiscus</td><td>3</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Bellandur</td><td>Sobha Garnet</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Bellandur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Aishwarya Serenity</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Samhita Maruthi Homes</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Mangalaya Suryodaya</td><td>3</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Purva Rivera</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Rohan Vasantha</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Marathahalli</td><td>Purva Fountain Square</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Marathahalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Doddanekundi</td><td>Bren Avalon</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Doddanekundi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Doddanekundi</td><td>Durga Petals</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Doddanekundi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Doddanekundi</td><td>Alpine Eco</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Doddanekundi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Durga Rainbow</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Nagarjuna Maple Heights</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Trifecta Starlight</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Brigade Metropolis</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Shilpitha Splendour</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>Nester Harmony</td><td>2</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Mahadevapura</td><td>DNR Casablanca</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Mahadevapura,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Old Madras Road</td><td>Celestial Greens</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Old+Madras+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Candeur Carlisle</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>DivyaShree Republic of Whitefield</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Sumadhura Silver Ripples</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Casa Gopalan</td><td>2</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Sumadhura Anandam</td><td>2</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige Palms</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige Boulevard</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Brigade Woods</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Assetz Marq</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Vaswani Exquisite</td><td>3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Goyal Orchid Whitefield</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Brigade Cosmopolis</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Balaji Elegance</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Alpine Viva</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Sumadhura Shikharam</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige Waterford</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige Dolce Vita</td><td>2</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Habitat Crest</td><td>3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Sumadhura Eden Garden</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>SLV Central Park</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Foyer Infinity</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige White Meadows</td><td>4, 5, 6</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>GK Tropical Springs</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>
+
+Amrutha Platinum Towers</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>KR Puram</td><td>Sobha Lake Gardens</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=KR+Puram,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>KR Puram</td><td>Pashmina Waterfront</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=KR+Puram,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Godrej United</td><td>2, 3, 4, 5</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>SMR Endeavour</td><td>3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Gopalan Grandeur</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Habitat Eden Heights</td><td>3, 4</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Lakeside Orchard</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Skylark Esta</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Sumadhura Nandam</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Keerthi Surya Shakti Towers</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Pavani Divine</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Godrej Air Nxt</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Sumadhura Shangrila</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Sumadhura Srinivasam</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Alpine Fiesta</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>DSR Lotus Tower</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Prestige Shantiniketan</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Casagrand Royce</td><td>1, 3</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Hoodi</td><td>Brigade Lakefront</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Hoodi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>SJR Brooklyn</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>Sterling Brookside</td><td>1, 3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>Keerthi Flora</td><td>2</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>Renaissance Rainbow</td><td>3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>DSR Spring Beauty</td><td>3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>Knightsbridge Apartments</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kundalhalli</td><td>Acme Encore</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Kundalhalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>AECS Layout</td><td>Deccan Fields</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=AECS+Layout,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>AECS Layout</td><td>Pebble Creek</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=AECS+Layout,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>AECS Layout</td><td>Synapse Nest</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=AECS+Layout,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Sumadhura Lake Breeze</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Parimala Sunridge</td><td>2</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Brigade Cornerstone Utopia</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Meda Heights</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Candeur Landmark</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Varthur</td><td>Mana Tropicale</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Varthur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Gunjur</td><td>Prestige Lakeside Habitat</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Gunjur,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Whitefield</td><td>Prestige Laughing Waters</td><td>3, 4, 5</td><td><a href="https://www.google.com/maps?q=Whitefield,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Balegere</td><td>Sobha Sentosa</td><td>1, 3</td><td><a href="https://www.google.com/maps?q=Balegere,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Balegere</td><td>Sobha Dream Acres</td><td>1, 2</td><td><a href="https://www.google.com/maps?q=Balegere,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kannamangala</td><td>Sandeep Vihar</td><td>2, 3, 4</td><td><a href="https://www.google.com/maps?q=Kannamangala,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kannamangala</td><td>Adarsh Serenity</td><td>1, 4</td><td><a href="https://www.google.com/maps?q=Kannamangala,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Kodathi</td><td>Asstez 63 Degree East</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Kodathi,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>DSR Parkway</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Mana Capitol</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Ahad Serinity</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Mana Uber Verdanta</td><td>2, 3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Sattva Signet</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Sarjapur Road</td><td>Bren Zahara</td><td>3</td><td><a href="https://www.google.com/maps?q=Sarjapur+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Budigere</td><td>Prestige Tranquility</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Budigere,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Budigere</td><td>Brigade Buena Vista</td><td>1, 2, 3, 4</td><td><a href="https://www.google.com/maps?q=Budigere,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Soukya Road</td><td>Sowparnika Columns</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Soukya+Road,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                            <tr><td>Seegehalli</td><td>SBR Horizon</td><td>1, 2, 3</td><td><a href="https://www.google.com/maps?q=Seegehalli,+Bengaluru,+Karnataka&layer=c" target="_blank" class="street-view-link">View</a></td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <button id="filter-btn" class="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Filter Societies</button>
-        </div>
+        </section>
 
-        <!-- Filtered Results -->
-        <div id="results" class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtered Societies</h2>
-            <ul id="society-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></ul>
-        </div>
+        <!-- Visual Search -->
+        <section>
+            <h2 class="text-3xl font-semibold mb-6">Visual Search</h2>
+            <div class="map-section">
+                <iframe src="https://www.google.com/maps/d/u/1/embed?mid=1WkK4KL0WU-9DkKy_YjKBrtN6SxAysJ0&ehbc=2E312F" width="100%" height="480"></iframe>
+            </div>
+        </section>
+    </main>
 
-        <!-- Map -->
-        <div class="map-container p-4 mb-8">
-            <iframe src="https://www.google.com/maps/d/u/1/embed?mid=1WkK4KL0WU-9DkKy_YjKBrtN6SxAysJ0&ehbc=2E312F" width="100%" height="480" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    <footer class="py-8">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Community Search. All rights reserved.</p>
         </div>
-    </div>
+    </footer>
 
     <script>
-        const societies = [
-            { Area: "Bellandur", SocietyName: "Divyasree 77", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Mantri Espana", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Green Glen Layout", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Sobha Marvella", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Sobha Aquamarine", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Adarsh Palm Retreat", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Prestige Kew Gardens", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Assetz East Point", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Rohan Iksha", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Oceanus Freesia Enclave", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Kul I Life", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Sobha Hibiscus", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Bellandur", SocietyName: "Sobha Garnet", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Aishwarya Serenity", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Samhita Maruthi Homes", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Mangalaya Suryodaya", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Purva Rivera", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Rohan Vasantha", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Marathahalli", SocietyName: "Purva Fountain Square", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Doddanekundi", SocietyName: "Bren Avalon", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Doddanekundi", SocietyName: "Durga Petals", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Doddanekundi", SocietyName: "Alpine Eco", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Durga Rainbow", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Nagarjuna Maple Heights", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Trifecta Starlight", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Brigade Metropolis", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Shilpitha Splendour", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "Nester Harmony", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Mahadevapura", SocietyName: "DNR Casablanca", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Old Madras Road", SocietyName: "Celestial Greens", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Candeur Carlisle", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "DivyaShree Republic of Whitefield", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Sumadhura Silver Ripples", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Casa Gopalan", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Sumadhura Anandam", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige Palms", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige Boulevard", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Brigade Woods", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Assetz Marq", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Vaswani Exquisite", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Goyal Orchid Whitefield", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Brigade Cosmopolis", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Balaji Elegance", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Alpine Viva", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Sumadhura Shikharam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige Waterford", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige Dolce Vita", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Habitat Crest", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Sumadhura Eden Garden", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "SLV Central Park", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Foyer Infinity", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige White Meadows", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "Y", "6BHK": "Y" },
-            { Area: "Whitefield", SocietyName: "GK Tropical Springs", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Amrutha Platinum Towers", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "KR Puram", SocietyName: "Sobha Lake Gardens", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "KR Puram", SocietyName: "Pashmina Waterfront", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Godrej United", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "SMR Endeavour", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Gopalan Grandeur", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Habitat Eden Heights", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Lakeside Orchard", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Skylark Esta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Sumadhura Nandam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Keerthi Surya Shakti Towers", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Pavani Divine", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Godrej Air Nxt", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Sumadhura Shangrila", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Sumadhura Srinivasam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Alpine Fiesta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "DSR Lotus Tower", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Prestige Shantiniketan", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Casagrand Royce", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Hoodi", SocietyName: "Brigade Lakefront", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "SJR Brooklyn", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "Sterling Brookside", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "Keerthi Flora", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "Renaissance Rainbow", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "DSR Spring Beauty", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "Knightsbridge Apartments", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kundalhalli", SocietyName: "Acme Encore", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "AECS Layout", SocietyName: "Deccan Fields", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "AECS Layout", SocietyName: "Pebble Creek", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "AECS Layout", SocietyName: "Synapse Nest", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Sumadhura Lake Breeze", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Parimala Sunridge", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Brigade Cornerstone Utopia", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Meda Heights", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Candeur Landmark", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Varthur", SocietyName: "Mana Tropicale", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Gunjur", SocietyName: "Prestige Lakeside Habitat", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Whitefield", SocietyName: "Prestige Laughing Waters", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
-            { Area: "Balegere", SocietyName: "Sobha Sentosa", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Balegere", SocietyName: "Sobha Dream Acres", "1BHK": "Y", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kannamangala", SocietyName: "Sandeep Vihar", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kannamangala", SocietyName: "Adarsh Serenity", "1BHK": "Y", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Kodathi", SocietyName: "Asstez 63 Degree East", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "DSR Parkway", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Mana Capitol", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Ahad Serinity", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Mana Uber Verdanta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Sattva Signet", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Sarjapur Road", SocietyName: "Bren Zahara", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Budigere", SocietyName: "Prestige Tranquility", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Budigere", SocietyName: "Brigade Buena Vista", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
-            { Area: "Soukya Road", SocietyName: "Sowparnika Columns", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
-            { Area: "Seegehalli", SocietyName: "SBR Horizon", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" }
-        ];
+        const areaFilter = document.getElementById('area');
+        const configFilters = document.querySelectorAll('.config-filter');
+        const table = document.getElementById('community-table');
+        const rows = table.querySelectorAll('tbody tr');
 
-        document.getElementById('filter-btn').addEventListener('click', () => {
-            const locality = document.getElementById('locality').value;
-            const configuration = document.getElementById('configuration').value;
-            const societyList = document.getElementById('society-list');
+        function filterTable() {
+            const selectedArea = areaFilter.value;
+            const selectedConfigs = Array.from(configFilters)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
 
-            // Filter societies
-            const filteredSocieties = societies.filter(society => {
-                const matchesLocality = !locality || society.Area === locality;
-                const matchesConfig = !configuration || society[configuration] === 'Y';
-                return matchesLocality && matchesConfig;
+            rows.forEach(row => {
+                const area = row.cells[0].textContent;
+                const configs = row.cells[2].textContent.split(', ').filter(c => c !== 'None');
+
+                const matchesArea = !selectedArea || area === selectedArea;
+                const matchesConfig = selectedConfigs.length === 0
+                    ? true
+                    : selectedConfigs.every(config => configs.includes(config));
+
+                row.style.display = matchesArea && matchesConfig ? '' : 'none';
             });
+        }
 
-            // Update UI
-            societyList.innerHTML = '';
-            if (filteredSocieties.length === 0) {
-                societyList.innerHTML = '<li class="text-gray-500">No societies match the selected filters.</li>';
-            } else {
-                filteredSocieties.forEach(society => {
-                    const li = document.createElement('li');
-                    li.className = 'p-4 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow';
-                    li.innerHTML = `
-                        <div class="flex justify-between">
-                            <span class="font-medium text-gray-800">${society.SocietyName}</span>
-                            <span class="text-gray-600">${society.Area}</span>
-                        </div>
-                        <div class="mt-2 text-sm text-gray-500">
-                            Configurations: ${['1BHK', '2BHK', '3BHK', '4BHK', '5BHK', '6BHK']
-                                .filter(bhk => society[bhk] === 'Y')
-                                .join(', ') || 'None'}
-                        </div>
-                    `;
-                    societyList.appendChild(li);
-                });
-            }
-        });
+        areaFilter.addEventListener('change', filterTable);
+        configFilters.forEach(checkbox => checkbox.addEventListener('change', filterTable));
     </script>
-</body>
-</html>
