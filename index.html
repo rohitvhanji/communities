@@ -7,84 +7,235 @@
     <link rel="icon" type="image/x-icon" href="https://www.google.com/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        #map {
-            height: 500px;
-            width: 100%;
-            margin: 0;
-            padding: 0;
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .filter-section {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .map-container {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        select, button {
+            transition: all 0.2s ease-in-out;
+        }
+        select:focus, button:focus {
+            outline: none;
+            ring: 2px solid #3b82f6;
+        }
+        button:hover {
+            background-color: #2563eb;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold text-center mb-6">Sobha Sentosa in Balegere</h1>
-        
-        <!-- Map -->
-        <div id="map" class="bg-white p-4 rounded-lg shadow-md mb-6"></div>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4 max-w-5xl">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Find Societies in Balegere & Nearby</h1>
 
-        <!-- Community List -->
-        <div class="bg-white p-4 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-4">Community</h2>
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="p-2 border">Area</th>
-                        <th class="p-2 border">Society Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="p-2 border">Balegere</td>
-                        <td class="p-2 border">Sobha Sentosa</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Filter Section -->
+        <div class="filter-section p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <label for="locality" class="block text-sm font-medium text-gray-700 mb-1">Locality</label>
+                    <select id="locality" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Localities</option>
+                        <option value="Balegere">Balegere</option>
+                        <option value="Bellandur">Bellandur</option>
+                        <option value="Marathahalli">Marathahalli</option>
+                        <option value="Doddanekundi">Doddanekundi</option>
+                        <option value="Mahadevapura">Mahadevapura</option>
+                        <option value="Old Madras Road">Old Madras Road</option>
+                        <option value="Whitefield">Whitefield</option>
+                        <option value="KR Puram">KR Puram</option>
+                        <option value="Hoodi">Hoodi</option>
+                        <option value="Kundalhalli">Kundalhalli</option>
+                        <option value="AECS Layout">AECS Layout</option>
+                        <option value="Varthur">Varthur</option>
+                        <option value="Sarjapur Road">Sarjapur Road</option>
+                        <option value="Kannamangala">Kannamangala</option>
+                        <option value="Kodathi">Kodathi</option>
+                        <option value="Budigere">Budigere</option>
+                        <option value="Soukya Road">Soukya Road</option>
+                        <option value="Seegehalli">Seegehalli</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label for="configuration" class="block text-sm font-medium text-gray-700 mb-1">Configuration</label>
+                    <select id="configuration" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Configurations</option>
+                        <option value="1BHK">1BHK</option>
+                        <option value="2BHK">2BHK</option>
+                        <option value="3BHK">3BHK</option>
+                        <option value="4BHK">4BHK</option>
+                        <option value="5BHK">5BHK</option>
+                        <option value="6BHK">6BHK</option>
+                    </select>
+                </div>
+            </div>
+            <button id="filter-btn" class="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Filter Societies</button>
+        </div>
+
+        <!-- Filtered Results -->
+        <div id="results" class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtered Societies</h2>
+            <ul id="society-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></ul>
+        </div>
+
+        <!-- Map -->
+        <div class="map-container p-4 mb-8">
+            <iframe src="https://www.google.com/maps/d/u/1/embed?mid=1WkK4KL0WU-9DkKy_YjKBrtN6SxAysJ0&ehbc=2E312F" width="100%" height="480" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8yQT7bKrP-ASq-04kcYgXaYJwOOC9uMc&libraries=marker"></script>
     <script>
-        function initMap() {
-            const coordinates = {
-                lat: 12.9416,
-                lng: 77.7637
-            };
-            let map;
-            try {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 15,
-                    center: coordinates,
-                    scrollwheel: false,
-                    mapId: '46ba8d1b526fee4a'
-                });
+        const societies = [
+            { Area: "Bellandur", SocietyName: "Divyasree 77", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Mantri Espana", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Green Glen Layout", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Sobha Marvella", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Sobha Aquamarine", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Adarsh Palm Retreat", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Prestige Kew Gardens", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Assetz East Point", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Rohan Iksha", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Oceanus Freesia Enclave", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Kul I Life", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Sobha Hibiscus", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Bellandur", SocietyName: "Sobha Garnet", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Aishwarya Serenity", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Samhita Maruthi Homes", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Mangalaya Suryodaya", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Purva Rivera", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Rohan Vasantha", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Marathahalli", SocietyName: "Purva Fountain Square", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Doddanekundi", SocietyName: "Bren Avalon", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Doddanekundi", SocietyName: "Durga Petals", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Doddanekundi", SocietyName: "Alpine Eco", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Durga Rainbow", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Nagarjuna Maple Heights", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Trifecta Starlight", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Brigade Metropolis", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Shilpitha Splendour", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "Nester Harmony", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Mahadevapura", SocietyName: "DNR Casablanca", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Old Madras Road", SocietyName: "Celestial Greens", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Candeur Carlisle", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "DivyaShree Republic of Whitefield", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Sumadhura Silver Ripples", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Casa Gopalan", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Sumadhura Anandam", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige Palms", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige Boulevard", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Brigade Woods", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Assetz Marq", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Vaswani Exquisite", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Goyal Orchid Whitefield", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Brigade Cosmopolis", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Balaji Elegance", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Alpine Viva", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Sumadhura Shikharam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige Waterford", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige Dolce Vita", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Habitat Crest", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Sumadhura Eden Garden", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "SLV Central Park", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Foyer Infinity", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige White Meadows", "1BHK": "N", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "Y", "6BHK": "Y" },
+            { Area: "Whitefield", SocietyName: "GK Tropical Springs", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Amrutha Platinum Towers", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "KR Puram", SocietyName: "Sobha Lake Gardens", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "KR Puram", SocietyName: "Pashmina Waterfront", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Godrej United", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "SMR Endeavour", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Gopalan Grandeur", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Habitat Eden Heights", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Lakeside Orchard", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Skylark Esta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Sumadhura Nandam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Keerthi Surya Shakti Towers", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Pavani Divine", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Godrej Air Nxt", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Sumadhura Shangrila", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Sumadhura Srinivasam", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Alpine Fiesta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "DSR Lotus Tower", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Prestige Shantiniketan", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Casagrand Royce", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Hoodi", SocietyName: "Brigade Lakefront", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "SJR Brooklyn", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "Sterling Brookside", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "Keerthi Flora", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "Renaissance Rainbow", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "DSR Spring Beauty", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "Knightsbridge Apartments", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kundalhalli", SocietyName: "Acme Encore", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "AECS Layout", SocietyName: "Deccan Fields", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "AECS Layout", SocietyName: "Pebble Creek", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "AECS Layout", SocietyName: "Synapse Nest", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Sumadhura Lake Breeze", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Parimala Sunridge", "1BHK": "N", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Brigade Cornerstone Utopia", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Meda Heights", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Candeur Landmark", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Varthur", SocietyName: "Mana Tropicale", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Gunjur", SocietyName: "Prestige Lakeside Habitat", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Whitefield", SocietyName: "Prestige Laughing Waters", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "Y", "5BHK": "Y", "6BHK": "N" },
+            { Area: "Balegere", SocietyName: "Sobha Sentosa", "1BHK": "Y", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Balegere", SocietyName: "Sobha Dream Acres", "1BHK": "Y", "2BHK": "Y", "3BHK": "N", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kannamangala", SocietyName: "Sandeep Vihar", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kannamangala", SocietyName: "Adarsh Serenity", "1BHK": "Y", "2BHK": "N", "3BHK": "N", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Kodathi", SocietyName: "Asstez 63 Degree East", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "DSR Parkway", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Mana Capitol", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Ahad Serinity", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Mana Uber Verdanta", "1BHK": "N", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Sattva Signet", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Sarjapur Road", SocietyName: "Bren Zahara", "1BHK": "N", "2BHK": "N", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Budigere", SocietyName: "Prestige Tranquility", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Budigere", SocietyName: "Brigade Buena Vista", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "Y", "5BHK": "N", "6BHK": "N" },
+            { Area: "Soukya Road", SocietyName: "Sowparnika Columns", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" },
+            { Area: "Seegehalli", SocietyName: "SBR Horizon", "1BHK": "Y", "2BHK": "Y", "3BHK": "Y", "4BHK": "N", "5BHK": "N", "6BHK": "N" }
+        ];
 
-                // Add marker for Sobha Sentosa
-                const marker = new google.maps.marker.AdvancedMarkerElement({
-                    position: coordinates,
-                    map: map,
-                    content: createMarkerElement('Sobha Sentosa'),
-                    title: 'Sobha Sentosa'
+        document.getElementById('filter-btn').addEventListener('click', () => {
+            const locality = document.getElementById('locality').value;
+            const configuration = document.getElementById('configuration').value;
+            const societyList = document.getElementById('society-list');
+
+            // Filter societies
+            const filteredSocieties = societies.filter(society => {
+                const matchesLocality = !locality || society.Area === locality;
+                const matchesConfig = !configuration || society[configuration] === 'Y';
+                return matchesLocality && matchesConfig;
+            });
+
+            // Update UI
+            societyList.innerHTML = '';
+            if (filteredSocieties.length === 0) {
+                societyList.innerHTML = '<li class="text-gray-500">No societies match the selected filters.</li>';
+            } else {
+                filteredSocieties.forEach(society => {
+                    const li = document.createElement('li');
+                    li.className = 'p-4 bg-white rounded-md shadow-sm hover:shadow-md transition-shadow';
+                    li.innerHTML = `
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-800">${society.SocietyName}</span>
+                            <span class="text-gray-600">${society.Area}</span>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-500">
+                            Configurations: ${['1BHK', '2BHK', '3BHK', '4BHK', '5BHK', '6BHK']
+                                .filter(bhk => society[bhk] === 'Y')
+                                .join(', ') || 'None'}
+                        </div>
+                    `;
+                    societyList.appendChild(li);
                 });
-            } catch (e) {
-                console.error('Map initialization failed:', e);
-                document.getElementById('map').innerHTML = '<p class="text-center text-red-500">Failed to load map. Please check API key or Map ID.</p>';
             }
-        }
-
-        function createMarkerElement(labelText) {
-            const markerDiv = document.createElement('div');
-            markerDiv.innerHTML = `
-                <div style="position: relative; text-align: center;">
-                    <img src="https://maps.google.com/mapfiles/ms/icons/red-dot.png" style="width: 32px; height: 32px;" />
-                    <div style="position: absolute; top: -32px; left: 50%; transform: translateX(-50%); color: #C70E20; font-weight: bold; white-space: nowrap;">
-                        ${labelText}
-                    </div>
-                </div>
-            `;
-            return markerDiv;
-        }
-
-        google.maps.event.addDomListener(window, "load", initMap);
+        });
     </script>
 </body>
 </html>
